@@ -2,8 +2,10 @@ import type { SimState, RocketParams } from '../types/trajectory';
 import { R_EARTH_KM, G0, gravity, atmosphericDensity } from './orbitMath';
 
 // Drag parameters (simplified single-stage rocket)
+// A/m ≈ 2e-5 m²/kg is realistic for a large orbital rocket
+// (e.g. ~10 m² frontal area, ~500,000 kg gross mass)
 const CD = 0.3;
-const AREA_OVER_MASS = 0.005; // (m^2/kg) * (1/1000) for km/s units -> converted below
+const AREA_OVER_MASS = 2e-5; // m²/kg
 
 export function derivatives(state: SimState, params: RocketParams): SimState {
 	const { r, v, gamma } = state;
