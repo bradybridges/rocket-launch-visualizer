@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -24,13 +25,11 @@ export function LaunchControls({ defaultValues, onChange }: Props) {
 
 	const values = watch();
 
-	// Propagate valid changes upward
-	const parsed = schema.safeParse(values);
-	if (parsed.success) {
-		const current = JSON.stringify(parsed.data);
-		const prev = JSON.stringify(defaultValues);
-		if (current !== prev) onChange(parsed.data);
-	}
+	useEffect(() => {
+		const parsed = schema.safeParse(values);
+		if (parsed.success) onChange(parsed.data);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [JSON.stringify(values)]);
 
 	return (
 		<div className="flex flex-col gap-5">
