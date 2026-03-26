@@ -12,11 +12,8 @@ export function useTrajectorySimulation(params: RocketParams): SimulationResult 
 		const points: TrajectoryPoint[] = [];
 		let state: SimState = initialState(params.pitchoverAngleDeg);
 		const targetR = R_EARTH_KM + params.targetAltitudeKm;
-		let maxAltKm = 0;
-
 		for (let i = 0; i < MAX_STEPS; i++) {
 			const altKm = state.r - R_EARTH_KM;
-			if (altKm > maxAltKm) maxAltKm = altKm;
 
 			points.push({
 				altitude: altKm,
@@ -37,6 +34,7 @@ export function useTrajectorySimulation(params: RocketParams): SimulationResult 
 		const last = points[points.length - 1];
 		const vCirc = circularVelocity(params.targetAltitudeKm);
 		const circDeltaV = Math.max(0, vCirc - last.velocity);
+		const apogeeAltitudeKm = points.reduce((max, p) => Math.max(max, p.altitude), 0);
 
 		return {
 			points,
@@ -45,7 +43,7 @@ export function useTrajectorySimulation(params: RocketParams): SimulationResult 
 			circularizationDeltaVKms: circDeltaV,
 			totalDeltaVKms: last.velocity + circDeltaV,
 			burnDurationS: last.time,
-			apogeeAltitudeKm: maxAltKm,
+			apogeeAltitudeKm,
 		};
 	}, [params]);
 }
