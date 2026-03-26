@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { scaleLinear } from 'd3-scale';
 import type { TrajectoryPoint } from '../../types/trajectory';
 import { EarthArc } from './EarthArc';
 import { OrbitRing } from './OrbitRing';
 import { TrajectoryPath } from './TrajectoryPath';
+import { TrajectoryTooltip } from './TrajectoryTooltip';
 
 interface Props {
 	points: TrajectoryPoint[];
@@ -18,6 +19,8 @@ export function TrajectoryCanvas({ points, targetAltitudeKm, width, height }: Pr
 	const innerW = width - MARGIN.left - MARGIN.right;
 	const innerH = height - MARGIN.top - MARGIN.bottom;
 
+	const [hoveredPoint, setHoveredPoint] = useState<TrajectoryPoint | null>(null);
+
 	const { xScale, yScale } = useMemo(() => {
 		const maxDownrange = points.length > 0
 			? Math.max(...points.map((p) => p.downrange), 100)
@@ -28,6 +31,29 @@ export function TrajectoryCanvas({ points, targetAltitudeKm, width, height }: Pr
 		const yScale = scaleLinear().domain([0, maxAlt]).range([innerH, 0]);
 		return { xScale, yScale };
 	}, [points, targetAltitudeKm, innerW, innerH]);
+
+	const handleMouseMove = useCallback((e: React.MouseEvent<SVGRectElement>) => {
+		if (points.length < 2) return;
+		const rect = e.currentTarget.getBoundingClientRect();
+		const mouseX = e.clientX - rect.left;
+		const downrange = xScale.invert(mouseX);
+		// Binary search for nearest point by downrange
+		let lo = 0;
+		let hi = points.length - 1;
+		while (lo < hi) {
+			const mid = (lo + hi) >> 1;
+			if (points[mid].downrange < downrange) lo = mid + 1;
+			else hi = mid;
+		}
+		// Pick closest of lo and lo-1
+		const nearest =
+			lo > 0 && Math.abs(points[lo - 1].downrange - downrange) < Math.abs(points[lo].downrange - downrange)
+				? points[lo - 1]
+				: points[lo];
+		setHoveredPoint(nearest);
+	}, [points, xScale]);
+
+	const handleMouseLeave = useCallback(() => setHoveredPoint(null), []);
 
 	const xTicks = xScale.ticks(6);
 	const yTicks = yScale.ticks(6);
@@ -117,6 +143,31 @@ export function TrajectoryCanvas({ points, targetAltitudeKm, width, height }: Pr
 						Altitude (km)
 					</text>
 				</g>
+
+					{/* Transparent mouse-capture overlay */}
+				{points.length > 1 && (
+					<rect
+						x={0}
+						y={0}
+						width={innerW}
+						height={innerH}
+						fill="transparent"
+						onMouseMove={handleMouseMove}
+						onMouseLeave={handleMouseLeave}
+						style={{ cursor: 'crosshair' }}
+					/>
+				)}
+
+				{/* Tooltip */}
+				{hoveredPoint && (
+					<TrajectoryTooltip
+						point={hoveredPoint}
+						xScale={xScale}
+						yScale={yScale}
+						innerW={innerW}
+						innerH={innerH}
+					/>
+				)}
 
 				{/* Velocity legend */}
 				<g transform={`translate(${innerW - 160}, 8)`}>
