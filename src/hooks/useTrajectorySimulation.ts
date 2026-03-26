@@ -45,5 +45,10 @@ export function useTrajectorySimulation(params: RocketParams): SimulationResult 
 			burnDurationS: last.time,
 			apogeeAltitudeKm,
 		};
-	}, [params]);
+	}, [
+		params.targetAltitudeKm,
+		params.thrustToWeightRatio,
+		params.includeAtmosphere,
+		params.pitchoverAngleDeg,
+	]);
 }
