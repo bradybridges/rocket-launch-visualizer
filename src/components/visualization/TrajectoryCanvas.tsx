@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { scaleLinear } from 'd3-scale';
-import { TrajectoryPoint } from '../../types/trajectory';
+import type { TrajectoryPoint } from '../../types/trajectory';
 import { EarthArc } from './EarthArc';
 import { OrbitRing } from './OrbitRing';
 import { TrajectoryPath } from './TrajectoryPath';

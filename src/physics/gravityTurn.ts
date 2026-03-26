@@ -1,4 +1,4 @@
-import { SimState, RocketParams } from '../types/trajectory';
+import type { SimState, RocketParams } from '../types/trajectory';
 import { R_EARTH_KM, G0, gravity, atmosphericDensity } from './orbitMath';
 
 // Drag parameters (simplified single-stage rocket)

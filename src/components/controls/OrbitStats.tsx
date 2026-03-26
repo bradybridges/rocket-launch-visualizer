@@ -1,4 +1,4 @@
-import { SimulationResult } from '../../types/trajectory';
+import type { SimulationResult } from '../../types/trajectory';
 
 interface Props {
 	result: SimulationResult;

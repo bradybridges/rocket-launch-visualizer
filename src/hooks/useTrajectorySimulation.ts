@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { RocketParams, SimState, SimulationResult, TrajectoryPoint } from '../types/trajectory';
+import type { RocketParams, SimState, SimulationResult, TrajectoryPoint } from '../types/trajectory';
 import { rk4Step } from '../physics/rk4';
 import { derivatives, initialState } from '../physics/gravityTurn';
 import { R_EARTH_KM, circularVelocity } from '../physics/orbitMath';

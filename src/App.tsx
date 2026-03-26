@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { RocketParams } from './types/trajectory';
+import type { RocketParams } from './types/trajectory';
 import { useTrajectorySimulation } from './hooks/useTrajectorySimulation';
 import { LaunchControls } from './components/controls/LaunchControls';
 import { OrbitStats } from './components/controls/OrbitStats';

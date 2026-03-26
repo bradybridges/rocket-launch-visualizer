@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
-import { ScaleLinear } from 'd3-scale';
-import { line } from 'd3-shape';
-import { TrajectoryPoint } from '../../types/trajectory';
+import type { ScaleLinear } from 'd3-scale';
+import type { TrajectoryPoint } from '../../types/trajectory';
 
 interface Props {
 	points: TrajectoryPoint[];
@@ -10,13 +9,6 @@ interface Props {
 }
 
 export function TrajectoryPath({ points, xScale, yScale }: Props) {
-	const pathD = useMemo(() => {
-		const lineGen = line<TrajectoryPoint>()
-			.x((p) => xScale(p.downrange))
-			.y((p) => yScale(p.altitude));
-		return lineGen(points) ?? '';
-	}, [points, xScale, yScale]);
-
 	const maxVelocity = Math.max(...points.map((p) => p.velocity));
 
 	// Render colored segments to show velocity gradient (slow=orange, fast=cyan)
@@ -72,7 +64,3 @@ export function TrajectoryPath({ points, xScale, yScale }: Props) {
 		</g>
 	);
 }
-
-// Keep pathD generated but unused — satisfies the linter for future animation use
-void line;
-void pathD;

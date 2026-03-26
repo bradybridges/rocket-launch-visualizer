@@ -1,4 +1,4 @@
-import { ScaleLinear } from 'd3-scale';
+import type { ScaleLinear } from 'd3-scale';
 import { R_EARTH_KM } from '../../physics/orbitMath';
 
 interface Props {

@@ -6,6 +6,7 @@ export interface RocketParams {
 }
 
 export interface SimState {
+	[key: string]: number;
 	r: number;       // distance from Earth center (km)
 	v: number;       // speed (km/s)
 	gamma: number;   // flight path angle (radians)

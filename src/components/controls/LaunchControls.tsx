@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { RocketParams } from '../../types/trajectory';
+import type { RocketParams } from '../../types/trajectory';
 
 const schema = z.object({
 	targetAltitudeKm: z.number().min(200, 'Min 200 km').max(36000, 'Max 36,000 km'),
