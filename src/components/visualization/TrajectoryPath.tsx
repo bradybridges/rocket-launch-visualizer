@@ -54,6 +54,15 @@ export function TrajectoryPath({ points, xScale, yScale }: Props) {
 				r={4}
 				fill="#f97316"
 			/>
+			<text
+				x={xScale(points[0].downrange) + 8}
+				y={yScale(points[0].altitude) - 6}
+				fill="#f97316"
+				fontSize={11}
+				textAnchor="start"
+			>
+				Launch
+			</text>
 			{/* Insertion marker */}
 			<circle
 				cx={xScale(points[points.length - 1].downrange)}
@@ -61,6 +70,15 @@ export function TrajectoryPath({ points, xScale, yScale }: Props) {
 				r={4}
 				fill="#22d3ee"
 			/>
+			<text
+				x={xScale(points[points.length - 1].downrange) + 8}
+				y={yScale(points[points.length - 1].altitude) - 6}
+				fill="#22d3ee"
+				fontSize={11}
+				textAnchor="start"
+			>
+				Orbit insertion
+			</text>
 		</g>
 	);
 }

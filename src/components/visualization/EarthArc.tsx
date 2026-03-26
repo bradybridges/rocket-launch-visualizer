@@ -24,6 +24,9 @@ export function EarthArc({ xScale, yScale }: Props) {
 		.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0].toFixed(1)},${p[1].toFixed(1)}`)
 		.join(' ');
 
+	const labelX = xScale(xMin) + 6;
+	const labelY = yScale(0) - 6;
+
 	return (
 		<g>
 			<path
@@ -37,6 +40,16 @@ export function EarthArc({ xScale, yScale }: Props) {
 				fill="#0d1f35"
 				opacity={0.6}
 			/>
+			<text
+				x={labelX}
+				y={labelY}
+				fill="#3b82f6"
+				fontSize={11}
+				textAnchor="start"
+				opacity={0.8}
+			>
+				Earth surface
+			</text>
 		</g>
 	);
 }
