@@ -34,11 +34,11 @@ export function derivatives(state: SimState, params: RocketParams): SimState {
 	return { r: dr, v: dv, gamma: dgamma, x: dx, t: 1 };
 }
 
-export function initialState(pitchoverDeg: number): SimState {
+export function initialState(): SimState {
 	return {
 		r: R_EARTH_KM + 0.1,   // 100m above surface
 		v: 0.01,                // near-zero initial velocity (km/s)
-		gamma: (90 - pitchoverDeg) * (Math.PI / 180),
+		gamma: Math.PI / 2,     // launch purely vertical; pitchover applied by simulation loop
 		x: 0,
 		t: 0,
 	};
