@@ -3,6 +3,7 @@ export interface RocketParams {
 	thrustToWeightRatio: number;
 	includeAtmosphere: boolean;
 	pitchoverAngleDeg: number;
+	pitchoverAltitudeKm: number;
 }
 
 export interface SimState {

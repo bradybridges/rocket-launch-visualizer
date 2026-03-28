@@ -9,6 +9,7 @@ const schema = z.object({
 	thrustToWeightRatio: z.number().min(1.01, 'Must be > 1 to lift off').max(5),
 	includeAtmosphere: z.boolean(),
 	pitchoverAngleDeg: z.number().min(1).max(10),
+	pitchoverAltitudeKm: z.number().min(1, 'Min 1 km').max(50, 'Max 50 km'),
 });
 
 interface Props {
@@ -78,6 +79,29 @@ export function LaunchControls({ defaultValues, onChange }: Props) {
 				</div>
 				{errors.thrustToWeightRatio && (
 					<p className="text-xs text-red-400">{errors.thrustToWeightRatio.message}</p>
+				)}
+			</div>
+
+			{/* Pitchover Altitude */}
+			<div className="flex flex-col gap-1.5">
+				<label className="text-sm font-medium text-slate-300">
+					Pitchover Altitude
+					<span className="ml-2 text-cyan-400 font-mono">{values.pitchoverAltitudeKm} km</span>
+				</label>
+				<input
+					type="range"
+					min={1}
+					max={50}
+					step={1}
+					{...register('pitchoverAltitudeKm', { valueAsNumber: true })}
+					className="w-full accent-cyan-400 cursor-pointer"
+				/>
+				<div className="flex justify-between text-xs text-slate-500">
+					<span>1 km</span>
+					<span>50 km</span>
+				</div>
+				{errors.pitchoverAltitudeKm && (
+					<p className="text-xs text-red-400">{errors.pitchoverAltitudeKm.message}</p>
 				)}
 			</div>
 

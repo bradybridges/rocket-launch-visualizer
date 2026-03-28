@@ -10,6 +10,7 @@ const DEFAULT_PARAMS: RocketParams = {
 	thrustToWeightRatio: 1.5,
 	includeAtmosphere: true,
 	pitchoverAngleDeg: 3,
+	pitchoverAltitudeKm: 10,
 };
 
 export default function App() {

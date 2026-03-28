@@ -4,9 +4,8 @@ import { rk4Step } from '../physics/rk4';
 import { derivatives, initialState } from '../physics/gravityTurn';
 import { R_EARTH_KM, MU, circularVelocity } from '../physics/orbitMath';
 
-const DT = 0.5;               // timestep (s)
-const MAX_STEPS = 20000;      // safety cap
-const PITCHOVER_ALT_KM = 10; // fly vertically until this altitude, then kick to gravity turn
+const DT = 0.5;          // timestep (s)
+const MAX_STEPS = 20000; // safety cap
 
 export function useTrajectorySimulation(params: RocketParams): SimulationResult {
 	return useMemo(() => {
@@ -21,7 +20,7 @@ export function useTrajectorySimulation(params: RocketParams): SimulationResult 
 			// Apply programmed pitchover kick once the rocket clears the vertical rise altitude.
 			// This matches real rocket ascent profiles: fly vertical to build speed, then tilt
 			// slightly to initiate the gravity turn at a velocity where the turn rate is stable.
-			if (!pitchedOver && altKm >= PITCHOVER_ALT_KM) {
+			if (!pitchedOver && altKm >= params.pitchoverAltitudeKm) {
 				state = { ...state, gamma: (90 - params.pitchoverAngleDeg) * (Math.PI / 180) };
 				pitchedOver = true;
 			}
@@ -62,5 +61,6 @@ export function useTrajectorySimulation(params: RocketParams): SimulationResult 
 		params.thrustToWeightRatio,
 		params.includeAtmosphere,
 		params.pitchoverAngleDeg,
+		params.pitchoverAltitudeKm,
 	]);
 }
