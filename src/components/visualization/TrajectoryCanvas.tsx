@@ -1,7 +1,6 @@
 import { useMemo, useState, useCallback } from 'react';
 import { scaleLinear } from 'd3-scale';
 import type { TrajectoryPoint } from '../../types/trajectory';
-import { EarthArc } from './EarthArc';
 import { OrbitRing } from './OrbitRing';
 import { TrajectoryPath } from './TrajectoryPath';
 import { TrajectoryTooltip } from './TrajectoryTooltip';
@@ -95,7 +94,6 @@ export function TrajectoryCanvas({ points, targetAltitudeKm, width, height }: Pr
 					/>
 				))}
 
-				<EarthArc xScale={xScale} yScale={yScale} />
 				<OrbitRing targetAltitudeKm={targetAltitudeKm} xScale={xScale} yScale={yScale} />
 				{points.length > 1 && (
 					<TrajectoryPath points={points} xScale={xScale} yScale={yScale} />
