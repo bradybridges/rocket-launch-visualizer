@@ -2,6 +2,8 @@
 
 An interactive browser-based tool for simulating and visualizing rocket trajectories using a physics-based gravity turn model.
 
+**Live demo:** https://bradybridges.github.io/rocket-launch-visualizer/
+
 ## Features
 
 - RK4 gravity turn simulation with atmospheric drag
