@@ -1,121 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useCallback, useRef, useEffect } from 'react';
+import type { RocketParams } from './types/trajectory';
+import { useTrajectorySimulation } from './hooks/useTrajectorySimulation';
+import { LaunchControls } from './components/controls/LaunchControls';
+import { OrbitStats } from './components/controls/OrbitStats';
+import { TrajectoryCanvas } from './components/visualization/TrajectoryCanvas';
 
-function App() {
-  const [count, setCount] = useState(0)
+const DEFAULT_PARAMS: RocketParams = {
+	targetAltitudeKm: 400,
+	thrustToWeightRatio: 1.5,
+	includeAtmosphere: true,
+	pitchoverAngleDeg: 3,
+	pitchoverAltitudeKm: 10,
+};
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+export default function App() {
+	const [params, setParams] = useState<RocketParams>(DEFAULT_PARAMS);
+	const result = useTrajectorySimulation(params);
 
-      <div className="ticks"></div>
+	const canvasContainerRef = useRef<HTMLDivElement>(null);
+	const [canvasSize, setCanvasSize] = useState({ width: 800, height: 560 });
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+	useEffect(() => {
+		if (!canvasContainerRef.current) return;
+		const observer = new ResizeObserver((entries) => {
+			const { width, height } = entries[0].contentRect;
+			setCanvasSize({ width: Math.floor(width), height: Math.floor(height) });
+		});
+		observer.observe(canvasContainerRef.current);
+		return () => observer.disconnect();
+	}, []);
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+	const handleParamsChange = useCallback((next: RocketParams) => {
+		setParams(next);
+	}, []);
+
+	return (
+		<div className="flex flex-col lg:flex-row min-h-screen bg-slate-950 text-slate-100">
+			{/* Left panel */}
+			<aside className="w-full lg:w-80 shrink-0 border-b lg:border-b-0 lg:border-r border-slate-800 p-6 flex flex-col gap-8 bg-slate-900">
+				<div>
+					<h1 className="text-lg font-semibold text-slate-100 tracking-tight">
+						Launch Trajectory
+					</h1>
+					<p className="text-xs text-slate-500 mt-1">
+						Gravity turn to circular orbit
+					</p>
+				</div>
+
+				<LaunchControls defaultValues={params} onChange={handleParamsChange} />
+				<OrbitStats result={result} />
+			</aside>
+
+			{/* Right panel */}
+			<main
+				ref={canvasContainerRef}
+				className="flex-1 flex items-center justify-center p-4 min-h-[400px] overflow-hidden"
+			>
+				{canvasSize.width > 0 && (
+					<TrajectoryCanvas
+						points={result.points}
+						targetAltitudeKm={params.targetAltitudeKm}
+						width={canvasSize.width}
+						height={canvasSize.height}
+					/>
+				)}
+			</main>
+		</div>
+	);
 }
-
-export default App
