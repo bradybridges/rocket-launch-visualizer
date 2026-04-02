@@ -54,7 +54,7 @@ export default function App() {
 			{/* Right panel */}
 			<main
 				ref={canvasContainerRef}
-				className="flex-1 flex items-center justify-center p-4 min-h-[400px]"
+				className="flex-1 flex items-center justify-center p-4 min-h-[400px] overflow-hidden"
 			>
 				{canvasSize.width > 0 && (
 					<TrajectoryCanvas
