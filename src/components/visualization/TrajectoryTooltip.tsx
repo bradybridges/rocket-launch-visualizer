@@ -6,14 +6,13 @@ interface Props {
 	xScale: ScaleLinear<number, number>;
 	yScale: ScaleLinear<number, number>;
 	innerW: number;
-	innerH: number;
 }
 
 const PAD = 8;
 const W = 148;
 const H = 80;
 
-export function TrajectoryTooltip({ point, xScale, yScale, innerW, innerH }: Props) {
+export function TrajectoryTooltip({ point, xScale, yScale, innerW }: Props) {
 	const cx = xScale(point.downrange);
 	const cy = yScale(point.altitude);
 

@@ -163,7 +163,6 @@ export function TrajectoryCanvas({ points, targetAltitudeKm, width, height }: Pr
 						xScale={xScale}
 						yScale={yScale}
 						innerW={innerW}
-						innerH={innerH}
 					/>
 				)}
 
